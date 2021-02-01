@@ -28,7 +28,7 @@ class FindLink
 
     /**
      * @param string $link Link
-     * @return mixed
+     * @return mixed|null
      */
     public function findLink(string $link)
     {
@@ -36,6 +36,6 @@ class FindLink
 
         $result = $this->repository->getLink($link);
 
-        return $result['old_link'];
+        return $result['old_link'] ?? null;
     }
 }

@@ -8,6 +8,7 @@ use App\Domain\Redirect\Service\FindLink;
 use App\Responder\Responder;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Slim\App;
 
 /**
  * Class RedirectAction
@@ -46,6 +47,10 @@ final class RedirectAction
     {
         $oldLink = $this->findLink->findLink($args['slug']);
 
-        return $this->responder->withRedirect($response, $oldLink, []);
+        if ($oldLink) {
+            return $this->responder->withRedirect($response, $oldLink, []);
+        } else {
+            return $this->responder->withRedirectFor($response, 'home')->withStatus(302);
+        }
     }
 }
