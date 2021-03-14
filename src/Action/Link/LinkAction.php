@@ -38,7 +38,7 @@ final class LinkAction
         $data = (array)$request->getParsedBody();
         $newLink = $this->linkLongener->linkLonger($data['link']);
 
-        $response->getBody()->write(json_encode(['link' => $newLink]));
+        $response->getBody()->write((string)json_encode(['link' => $newLink]));
 
         return $response->withHeader('Content-Type', 'application/json');
     }

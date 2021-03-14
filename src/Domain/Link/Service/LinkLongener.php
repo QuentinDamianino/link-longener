@@ -32,6 +32,10 @@ final class LinkLongener
      */
     public function linkLonger(string $oldLink): string
     {
+        if (strpos($oldLink, 'https://') === false || strpos($oldLink, 'http://') === false) {
+            $oldLink = 'http://' . $oldLink;
+        }
+
         $this->validateInputLink($oldLink);
 
         $newLink = $_SERVER['HTTP_HOST'] . '/' . $this->generateRandomString();
