@@ -17,6 +17,7 @@ class Link
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\NotBlank]
+    #[Assert\Url]
     private $oldLink;
 
     #[ORM\Column(type: 'text')]

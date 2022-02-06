@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Link;
 use App\Form\LinkFormType;
-use Doctrine\ORM\EntityManager;
+use App\Repository\LinkRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,9 +27,9 @@ class LinkLongenerController extends AbstractController
         $form = $this->createForm(LinkFormType::class, $link);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $link->setNewLink($this->generateNewLink($link->getOldLink()));
+            $link->setNewLink($this->generateNewLink($link->getOldLink(), $request));
 
-            $this->entityManager->persist(($link));
+            $this->entityManager->persist($link);
             $this->entityManager->flush();
 
             return $this->redirectToRoute('homepage');
@@ -40,8 +40,24 @@ class LinkLongenerController extends AbstractController
         ]);
     }
 
-    private function generateNewLink(string $oldLink): string
+    #[Route('/longer/{newUrl}', name: 'redirectToOldUrl')]
+    public function redirectToOldUrl(Request $request, LinkRepository $linkRepository): Response
     {
-        return 'placeholder';
+        $result = $linkRepository->findOneBy([
+            'newLink' => $request->getUri(),
+        ]);
+
+        return $this->redirect($result->getOldLink());
+    }
+
+    private function generateNewLink(string $oldLink, Request $request): string
+    {
+        $newUrl = uniqid($request->getUri() . 'longer/');
+
+        for ($i = 0; $i < 100; $i++) {
+            $newUrl .= uniqid();
+        }
+
+        return $newUrl;
     }
 }
