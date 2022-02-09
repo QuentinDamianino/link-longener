@@ -31,12 +31,11 @@ class LinkLongenerController extends AbstractController
 
             $this->entityManager->persist($link);
             $this->entityManager->flush();
-
-            return $this->redirectToRoute('homepage');
         }
 
         return $this->render('link_longener/index.html.twig', [
             'link_form' => $form->createView(),
+            'new_link' => $link->getNewLink() ?? null,
         ]);
     }
 
